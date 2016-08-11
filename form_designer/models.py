@@ -106,15 +106,17 @@ class FormDefinition(models.Model):
         # TODO: refactor, move to utils
         from django.template.loader import get_template
         from django.template import Template
+        require_context_obj = False
         if template:
             t = get_template(template)
         elif not self.message_template:
             t = get_template('txt/formdefinition/data_message.txt')
         else:
             t = Template(self.message_template)
+            require_context_obj = True
         context = self.get_form_data_context(form_data)
         context['data'] = form_data
-        if django.VERSION[:2] < (1, 8):
+        if django.VERSION[:2] < (1, 8) or require_context_obj:
             from django.template import Context
             context = Context(context)
         return t.render(context)
