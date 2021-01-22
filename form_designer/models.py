@@ -59,6 +59,12 @@ def get_django_template_from_string(template_string):
 
 @python_2_unicode_compatible
 class FormDefinition(models.Model):
+    VALIDATOR_CHOICES = (
+        (0, _('EGN')),
+        (1, _('EIK/BULSTAT')),
+        (2, _('Phone Number')),
+    )
+
     name = models.SlugField(_('name'), max_length=255, unique=True)
     require_hash = models.BooleanField(_('obfuscate URL to this form'), default=False, help_text=_('If enabled, the form can only be reached via a secret URL.'))
     private_hash = models.CharField(editable=False, max_length=40, default='')
