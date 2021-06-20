@@ -1,5 +1,5 @@
-Django Form Designer (AI Fork)
-******************************
+Django Form Designer (KCS Fork)
+*******************************
 
 Acknowledgements
 ================
@@ -7,7 +7,7 @@ Acknowledgements
 This project is a fork of https://github.com/samluescher/django-form-designer .
 Thanks, @samluescher!
 
-This fork is compatible with Django 1.7+ and Python 2.7+.
+This fork is compatible with Django 3.0+ and Python 3.6+.
 
 General
 =======
