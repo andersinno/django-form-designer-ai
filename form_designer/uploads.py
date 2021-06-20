@@ -1,4 +1,5 @@
 import os
+from types import SimpleNamespace
 
 from django.core.files.base import File
 from django.db.models.fields.files import FieldFile
@@ -65,7 +66,7 @@ def handle_uploaded_files(form_definition, form):
                              form_definition.name,
                              f'{root}_{secret_hash}{ext}'))
             storage.save(filename, uploaded_file)
-            form.cleaned_data[field.name] = StoredUploadedFile(filename)
+            form.cleaned_data[field.name] = StoredUploadedFile(name=filename)
             files.append(storage.path(filename))
     return files
 
@@ -79,11 +80,8 @@ class StoredUploadedFile(FieldFile):
 
     def __init__(self, name):
         File.__init__(self, None, name)
-        self.field = self
-
-    @property
-    def storage(self):
-        return get_storage()
+        self.field = SimpleNamespace(storage=get_storage())
+        self.instance = None
 
     def save(self, *args, **kwargs):
         raise NotImplementedError('Static files are read-only')  # pragma: no cover
