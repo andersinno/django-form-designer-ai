@@ -32,22 +32,18 @@ class FormValueDict(dict):
 
 
 def get_django_template_from_string(template_string):
-    if django.VERSION >= (1, 9):
-        # We need to create an ad-hoc django templates backend
-        # since we can't trust that the user's configuration
-        # even includes one.  Using the "raw" `django.template.Template`
-        # object does not work for reasons unknown (well, semi-unknown;
-        # it just seems to have a slightly different API).
-        from django.template.backends.django import DjangoTemplates
-        return DjangoTemplates({
-            'NAME': 'django-form-designer-renderer',
-            'DIRS': [],
-            'APP_DIRS': False,
-            'OPTIONS': {},
-        }).from_string(template_string)
-    else:
-        from django.template import Template
-        return Template(template_string)
+    # We need to create an ad-hoc django templates backend
+    # since we can't trust that the user's configuration
+    # even includes one.  Using the "raw" `django.template.Template`
+    # object does not work for reasons unknown (well, semi-unknown;
+    # it just seems to have a slightly different API).
+    from django.template.backends.django import DjangoTemplates
+    return DjangoTemplates({
+        'NAME': 'django-form-designer-renderer',
+        'DIRS': [],
+        'APP_DIRS': False,
+        'OPTIONS': {},
+    }).from_string(template_string)
 
 
 class FormDefinition(models.Model):
@@ -131,10 +127,6 @@ class FormDefinition(models.Model):
         context = self.get_form_data_context(form_data)
         context['data'] = form_data
         context['mail_cover_text'] = self.mail_cover_text or ''
-        if django.VERSION < (1, 9):
-            # For old Djangoes, we need to wrap these contexts
-            from django.template import Context
-            context = Context(context)
         return t.render(context)
 
     def count_fields(self):
@@ -149,17 +141,8 @@ class FormDefinition(models.Model):
         form_data = self.get_form_data(form)
         created_by = None
 
-        # User.is_authenticated became a hybrid bool/callable property in Django 1.10,
-        # and an actual non-callable property in Django 2.0.
-        # For old versions, not calling it will result in false positives,
-        # so we have to be pretty explicit about these checks here.
-
-        if django.VERSION[0] >= 2:
-            if user and user.is_authenticated:
-                created_by = user
-        else:  # TODO: Remove when Django <1.10 compat is dropped
-            if user and user.is_authenticated():
-                created_by = user
+        if user and user.is_authenticated:
+            created_by = user
 
         flog = FormLog(form_definition=self, data=form_data, created_by=created_by)
         flog.save()

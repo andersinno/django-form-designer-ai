@@ -1,12 +1,9 @@
 import re
 
-import django
 from django.core.mail import EmailMessage
 from django.utils.encoding import force_str
 
 from form_designer.utils import string_template_replace
-
-DJANGO_18 = django.VERSION[:2] >= (1, 8)
 
 
 def _template_replace_list(input_str, context_dict):
@@ -64,15 +61,10 @@ def build_form_mail(form_definition, form, files=None):
         'body': message,
         'from_email': from_email,
         'to': mail_to,
+        'reply_to': reply_to,
     }
 
-    if DJANGO_18:  # the reply_to kwarg is only supported in Django 1.8+ . . .
-        kwargs['reply_to'] = reply_to
-
     message = EmailMessage(**kwargs)
-
-    if not DJANGO_18:  # so do it manually when not on Django 1.8
-        message.extra_headers['Reply-To'] = ', '.join(map(force_text, reply_to))
 
     if form_definition.is_template_html:
         message.content_subtype = "html"
