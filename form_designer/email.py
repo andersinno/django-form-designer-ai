@@ -2,9 +2,9 @@ import re
 
 import django
 from django.core.mail import EmailMessage
+from django.utils.encoding import force_str
 
 from form_designer.utils import string_template_replace
-from django.utils.encoding import force_str
 
 DJANGO_18 = django.VERSION[:2] >= (1, 8)
 

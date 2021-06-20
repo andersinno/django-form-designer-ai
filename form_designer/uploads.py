@@ -5,10 +5,10 @@ from django.core.files.base import File
 from django.db.models.fields.files import FieldFile
 from django.forms.forms import NON_FIELD_ERRORS
 from django.template.defaultfilters import filesizeformat
+from django.utils.translation import gettext_lazy as _
 
 from form_designer import settings as app_settings
 from form_designer.utils import get_random_hash
-from django.utils.translation import gettext_lazy as _
 
 
 def get_storage():

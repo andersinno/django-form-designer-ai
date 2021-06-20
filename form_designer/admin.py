@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.http import Http404
+from django.urls import re_path, reverse
 from django.utils.module_loading import import_string
+from django.utils.translation import gettext_lazy as _
 
 from form_designer import settings
 from form_designer.forms import FormDefinitionFieldInlineForm, FormDefinitionForm
 from form_designer.models import FormDefinition, FormDefinitionField, FormLog
-from django.utils.translation import gettext_lazy as _
-from django.urls import re_path, reverse
 
 
 class FormDefinitionFieldInline(admin.StackedInline):

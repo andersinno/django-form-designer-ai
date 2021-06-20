@@ -1,12 +1,11 @@
 from base64 import b64decode
 
+import pytest
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.base import BaseStorage
 from django.core import mail
 from django.core.files.base import ContentFile, File
 from django.utils.crypto import get_random_string
-
-import pytest
 
 from form_designer import settings as fd_settings
 from form_designer.contrib.exporters.csv_exporter import CsvExporter

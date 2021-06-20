@@ -1,7 +1,7 @@
 import hashlib
 
-from django.utils.crypto import get_random_string
 from django.template import Context, Template, TemplateSyntaxError
+from django.utils.crypto import get_random_string
 
 
 def get_random_hash(length=32):

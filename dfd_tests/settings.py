@@ -1,6 +1,7 @@
-import django
 import os
 from tempfile import gettempdir
+
+import django
 
 try:
     import cms

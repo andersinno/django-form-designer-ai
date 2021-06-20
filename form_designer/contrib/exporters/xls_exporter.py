@@ -1,7 +1,7 @@
 from django.http import HttpResponse
+from django.utils.encoding import force_str
 
 from form_designer.contrib.exporters import FormLogExporterBase
-from django.utils.encoding import force_str
 
 try:
     import xlwt

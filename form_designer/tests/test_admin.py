@@ -1,7 +1,7 @@
+import pytest
 from django.forms.models import model_to_dict
 from django.utils.crypto import get_random_string
 
-import pytest
 from form_designer.models import FormDefinition
 
 
