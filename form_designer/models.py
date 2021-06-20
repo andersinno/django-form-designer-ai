@@ -8,7 +8,6 @@ from django.db import models
 from django.template.loader import get_template
 from django.utils.deprecation import warn_about_renamed_method
 from django.utils.module_loading import import_string
-from django.utils.translation import ugettext_lazy as _
 
 from form_designer import settings
 from form_designer.fields import ModelNameField, RegexpExpressionField, TemplateCharField, TemplateTextField
@@ -16,6 +15,7 @@ from form_designer.utils import get_random_hash, string_template_replace
 from picklefield.fields import PickledObjectField
 
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 MAIL_TEMPLATE_CONTEXT_HELP_TEXT = _(
     'Your form fields are available as template context. '

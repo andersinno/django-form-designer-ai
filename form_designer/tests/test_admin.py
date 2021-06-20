@@ -18,7 +18,7 @@ def test_admin_create_view_renders(admin_client):
 @pytest.mark.django_db
 @pytest.mark.parametrize("n_fields", range(5))
 def test_admin_create_view_creates_form(admin_client, n_fields):
-    name = get_random_string()
+    name = get_random_string(12)
     data = {
         '_save': 'Save',
         'action': '',

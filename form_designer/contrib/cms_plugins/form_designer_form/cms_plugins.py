@@ -1,10 +1,10 @@
-from django.utils.translation import ugettext_lazy as _
 
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from form_designer import settings
 from form_designer.contrib.cms_plugins.form_designer_form.models import CMSFormDefinition
 from form_designer.views import process_form
+from django.utils.translation import gettext_lazy as _
 
 
 class FormDesignerPlugin(CMSPluginBase):

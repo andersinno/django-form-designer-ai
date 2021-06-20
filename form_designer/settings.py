@@ -2,7 +2,7 @@ import os.path
 
 from django.conf import settings
 from django.core.files.storage import get_storage_class
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 STATIC_URL = os.path.join(getattr(settings, 'STATIC_URL', settings.MEDIA_URL), 'form_designer')
 

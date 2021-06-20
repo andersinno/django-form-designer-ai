@@ -40,7 +40,7 @@ def test_simple_form(
     greeting_form, push_messages, valid_data, method, anon, override_form
 ):
     fd = greeting_form
-    message = f'zzz-å{get_random_string()}Ö'
+    message = f'zzz-å{get_random_string(12)}Ö'
     data = {
         'greeting': message,
         'upload': ContentFile(VERY_SMALL_JPEG, name='hello.jpg'),

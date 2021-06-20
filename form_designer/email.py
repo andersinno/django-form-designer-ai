@@ -2,9 +2,9 @@ import re
 
 import django
 from django.core.mail import EmailMessage
-from django.utils.encoding import force_text
 
 from form_designer.utils import string_template_replace
+from django.utils.encoding import force_str
 
 DJANGO_18 = django.VERSION[:2] >= (1, 8)
 
@@ -26,7 +26,7 @@ def _template_replace_list(input_str, context_dict):
     return [
         string_template_replace(email, context_dict)
         for email
-        in re.compile(r'\s*[,;]+\s*').split(force_text(input_str))
+        in re.compile(r'\s*[,;]+\s*').split(force_str(input_str))
     ]
 
 

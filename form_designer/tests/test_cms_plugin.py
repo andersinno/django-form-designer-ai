@@ -29,7 +29,7 @@ def test_cms_plugin_renders_in_cms_page(rf):
     field = FormDefinitionField.objects.create(
         form_definition=fd,
         name='test',
-        label=get_random_string(),
+        label=get_random_string(12),
         field_class='django.forms.CharField',
     )
     page = api.create_page("test", "page.html", "en")
