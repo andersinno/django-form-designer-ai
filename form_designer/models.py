@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import re
 from collections import OrderedDict
 from decimal import Decimal
@@ -39,7 +37,7 @@ class FormValueDict(dict):
         self['name'] = name
         self['value'] = value
         self['label'] = label
-        super(FormValueDict, self).__init__()
+        super().__init__()
 
 
 def get_django_template_from_string(template_string):
@@ -61,7 +59,6 @@ def get_django_template_from_string(template_string):
         return Template(template_string)
 
 
-@python_2_unicode_compatible
 class FormDefinition(models.Model):
     name = models.SlugField(_('name'), max_length=255, unique=True)
     require_hash = models.BooleanField(_('obfuscate URL to this form'), default=False, help_text=_('If enabled, the form can only be reached via a secret URL.'))
@@ -98,7 +95,7 @@ class FormDefinition(models.Model):
             self.private_hash = get_random_hash()
         if not self.public_hash:
             self.public_hash = get_random_hash()
-        super(FormDefinition, self).save()
+        super().save()
 
     def get_field_dict(self):
         field_dict = OrderedDict()
@@ -198,7 +195,7 @@ class FormDefinition(models.Model):
         if template:  # We have a custom inline template string?
             # Assume the template string is HTML-ish if it has at least one opening
             # and closing HTML tag:
-            return (re.search(u"<[^>]+>", template) and re.search(u"</[^>]+>", template))
+            return (re.search("<[^>]+>", template) and re.search("</[^>]+>", template))
 
         # If there is no custom inline template, see if the `EMAIL_TEMPLATE`
         # setting points to a `.html` file:
@@ -213,7 +210,6 @@ class FormDefinition(models.Model):
         return name
 
 
-@python_2_unicode_compatible
 class FormDefinitionField(models.Model):
     form_definition = models.ForeignKey(FormDefinition, on_delete=models.CASCADE)
     field_class = models.CharField(_('field class'), max_length=100)
@@ -250,7 +246,7 @@ class FormDefinitionField(models.Model):
     def save(self, *args, **kwargs):
         if self.position is None:
             self.position = 0
-        super(FormDefinitionField, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def get_form_field_init_args(self):
         args = {
@@ -289,7 +285,7 @@ class FormDefinitionField(models.Model):
         if self.field_class in ('django.forms.ChoiceField', 'django.forms.MultipleChoiceField'):
             if self.choice_values:
                 choices = []
-                regex = re.compile('[\s]*\n[\s]*')
+                regex = re.compile('[\\s]*\n[\\s]*')
                 values = regex.split(self.choice_values)
                 labels = regex.split(self.choice_labels) if self.choice_labels else []
                 for index, value in enumerate(values):
@@ -323,7 +319,6 @@ class FormDefinitionField(models.Model):
         return (self.label or self.name)
 
 
-@python_2_unicode_compatible
 class FormLog(models.Model):
     form_definition = models.ForeignKey(FormDefinition, related_name='logs', on_delete=models.CASCADE)
     created = models.DateTimeField(_('Created'), auto_now=True)
@@ -335,7 +330,7 @@ class FormLog(models.Model):
         verbose_name_plural = _('form logs')
 
     def __str__(self):
-        return "%s (%s)" % (
+        return "{} ({})".format(
             self.form_definition.title or self.form_definition.name,
             self.created
         )
@@ -383,7 +378,7 @@ class FormLog(models.Model):
     data = property(get_data, set_data)
 
     def save(self, *args, **kwargs):
-        super(FormLog, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         if self._data:
             # safe form data and then clear temporary variable
             for value in self.values.all():
@@ -397,11 +392,10 @@ class FormLog(models.Model):
             self._data = None
 
 
-@python_2_unicode_compatible
 class FormValue(models.Model):
     form_log = models.ForeignKey(FormLog, related_name='values', on_delete=models.CASCADE)
     field_name = models.SlugField(_('field name'), max_length=255)
     value = PickledObjectField(_('value'), null=True, blank=True)
 
     def __str__(self):
-        return u'%s = %s' % (self.field_name, self.value)
+        return f'{self.field_name} = {self.value}'

@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django.http import HttpResponse
 from django.utils.encoding import force_text
 
@@ -43,4 +41,4 @@ class XlsExporter(FormLogExporterBase):
         self.wb.save(self.response)
 
     def export(self, request, queryset=None):
-        return super(XlsExporter, self).export(request, queryset)
+        return super().export(request, queryset)

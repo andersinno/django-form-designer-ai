@@ -96,4 +96,4 @@ def test_admin_create_view_renders(admin_client, greeting_form_with_log):
 @pytest.mark.django_db
 @pytest.mark.parametrize('format', ('CSV', 'XLS'))
 def test_admin_export_view(admin_client, greeting_form_with_log, format):
-    assert admin_client.get("/admin/form_designer/formlog/export/%s/" % format).content
+    assert admin_client.get(f"/admin/form_designer/formlog/export/{format}/").content

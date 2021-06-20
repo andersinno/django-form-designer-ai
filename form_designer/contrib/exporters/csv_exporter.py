@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import csv
 
 from django.http import HttpResponse
@@ -26,7 +24,7 @@ class CsvExporter(FormLogExporterBase):
     def init_response(self):
         self.response = HttpResponse(content_type='text/csv')
         self.response['Content-Disposition'] = (
-            'attachment; filename=%s.csv' % self.model._meta.verbose_name_plural
+            f'attachment; filename={self.model._meta.verbose_name_plural}.csv'
         )
 
     def writerow(self, row):
@@ -35,4 +33,4 @@ class CsvExporter(FormLogExporterBase):
         self.writer.writerow(row)
 
     def export(self, request, queryset=None):
-        return super(CsvExporter, self).export(request, queryset)
+        return super().export(request, queryset)

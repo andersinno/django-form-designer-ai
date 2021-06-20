@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django.conf.urls import url
 from django.contrib import admin
 from django.http import Http404
@@ -66,7 +64,7 @@ class FormLogAdmin(admin.ModelAdmin):
         return self.__class__.exporter_classes_ordered
 
     def get_actions(self, request):
-        actions = super(FormLogAdmin, self).get_actions(request)
+        actions = super().get_actions(request)
 
         for cls in self.get_exporter_classes():
             desc = _("Export selected %%(verbose_name_plural)s as %s") % cls.export_format()
@@ -82,7 +80,7 @@ class FormLogAdmin(admin.ModelAdmin):
                 name='form_designer_export'
             ),
         ]
-        return urls + super(FormLogAdmin, self).get_urls()
+        return urls + super().get_urls()
 
     def data_html(self, obj):
         return obj.form_definition.compile_message(obj.data, 'html/formdefinition/data_message.html')
@@ -127,7 +125,7 @@ class FormLogAdmin(admin.ModelAdmin):
 
         extra_context['exporters'] = exporter_links
 
-        return super(FormLogAdmin, self).changelist_view(request, extra_context)
+        return super().changelist_view(request, extra_context)
 
 
 admin.site.register(FormDefinition, FormDefinitionAdmin)

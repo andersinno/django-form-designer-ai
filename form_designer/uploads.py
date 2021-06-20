@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import hashlib
 import os
 import uuid
@@ -68,7 +66,7 @@ def handle_uploaded_files(form_definition, form):
             filename = storage.get_available_name(
                 os.path.join(app_settings.FILE_STORAGE_DIR,
                              form_definition.name,
-                             '%s_%s%s' % (root, secret_hash, ext)))
+                             f'{root}_{secret_hash}{ext}'))
             storage.save(filename, uploaded_file)
             form.cleaned_data[field.name] = StoredUploadedFile(filename)
             files.append(storage.path(filename))

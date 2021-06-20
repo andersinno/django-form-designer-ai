@@ -6,7 +6,7 @@ from form_designer import settings
 from form_designer.templatetags.friendly import friendly
 
 
-class ExporterBase(object):
+class ExporterBase:
 
     def __init__(self, model):
         self.model = model

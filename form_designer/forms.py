@@ -15,7 +15,7 @@ from form_designer.uploads import clean_files
 class DesignedForm(forms.Form):
 
     def __init__(self, form_definition, initial_data=None, *args, **kwargs):
-        super(DesignedForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.file_fields = []
         for def_field in form_definition.formdefinitionfield_set.all():
             self.add_defined_field(def_field, initial_data)
@@ -52,7 +52,7 @@ class FormDefinitionFieldInlineForm(forms.ModelForm):
         return self.cleaned_data['choice_model']
 
     def __init__(self, data=None, files=None, **kwargs):
-        super(FormDefinitionFieldInlineForm, self).__init__(data=data, files=files, **kwargs)
+        super().__init__(data=data, files=files, **kwargs)
         for field_name, choices in (
             ('field_class', settings.FIELD_CLASSES),
             ('widget', settings.WIDGET_CLASSES),
@@ -91,6 +91,6 @@ class FormDefinitionForm(forms.ModelForm):
     media = property(_media)
 
     def __init__(self, data=None, files=None, **kwargs):
-        super(FormDefinitionForm, self).__init__(data=data, files=files, **kwargs)
+        super().__init__(data=data, files=files, **kwargs)
         if 'form_template_name' in self.fields:
             self.fields['form_template_name'].widget = Select(choices=settings.FORM_TEMPLATES)
