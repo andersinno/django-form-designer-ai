@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import re
 from collections import OrderedDict
 from decimal import Decimal
@@ -8,20 +6,15 @@ import django
 from django.conf import settings as django_settings
 from django.db import models
 from django.template.loader import get_template
+from django.urls import reverse
 from django.utils.deprecation import warn_about_renamed_method
 from django.utils.module_loading import import_string
-from django.utils.six import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
+from picklefield.fields import PickledObjectField
 
 from form_designer import settings
 from form_designer.fields import ModelNameField, RegexpExpressionField, TemplateCharField, TemplateTextField
 from form_designer.utils import get_random_hash, string_template_replace
-from picklefield.fields import PickledObjectField
-
-try:
-    from django.urls import reverse
-except ImportError:
-    from django.core.urlresolvers import reverse
 
 MAIL_TEMPLATE_CONTEXT_HELP_TEXT = _(
     'Your form fields are available as template context. '
@@ -35,29 +28,24 @@ class FormValueDict(dict):
         self['name'] = name
         self['value'] = value
         self['label'] = label
-        super(FormValueDict, self).__init__()
+        super().__init__()
 
 
 def get_django_template_from_string(template_string):
-    if django.VERSION >= (1, 9):
-        # We need to create an ad-hoc django templates backend
-        # since we can't trust that the user's configuration
-        # even includes one.  Using the "raw" `django.template.Template`
-        # object does not work for reasons unknown (well, semi-unknown;
-        # it just seems to have a slightly different API).
-        from django.template.backends.django import DjangoTemplates
-        return DjangoTemplates({
-            'NAME': 'django-form-designer-renderer',
-            'DIRS': [],
-            'APP_DIRS': False,
-            'OPTIONS': {},
-        }).from_string(template_string)
-    else:
-        from django.template import Template
-        return Template(template_string)
+    # We need to create an ad-hoc django templates backend
+    # since we can't trust that the user's configuration
+    # even includes one.  Using the "raw" `django.template.Template`
+    # object does not work for reasons unknown (well, semi-unknown;
+    # it just seems to have a slightly different API).
+    from django.template.backends.django import DjangoTemplates
+    return DjangoTemplates({
+        'NAME': 'django-form-designer-renderer',
+        'DIRS': [],
+        'APP_DIRS': False,
+        'OPTIONS': {},
+    }).from_string(template_string)
 
 
-@python_2_unicode_compatible
 class FormDefinition(models.Model):
     name = models.SlugField(_('name'), max_length=255, unique=True)
     require_hash = models.BooleanField(_('obfuscate URL to this form'), default=False, help_text=_('If enabled, the form can only be reached via a secret URL.'))
@@ -94,7 +82,7 @@ class FormDefinition(models.Model):
             self.private_hash = get_random_hash()
         if not self.public_hash:
             self.public_hash = get_random_hash()
-        super(FormDefinition, self).save()
+        super().save()
 
     def get_field_dict(self):
         field_dict = OrderedDict()
@@ -139,10 +127,6 @@ class FormDefinition(models.Model):
         context = self.get_form_data_context(form_data)
         context['data'] = form_data
         context['mail_cover_text'] = self.mail_cover_text or ''
-        if django.VERSION < (1, 9):
-            # For old Djangoes, we need to wrap these contexts
-            from django.template import Context
-            context = Context(context)
         return t.render(context)
 
     def count_fields(self):
@@ -157,17 +141,8 @@ class FormDefinition(models.Model):
         form_data = self.get_form_data(form)
         created_by = None
 
-        # User.is_authenticated became a hybrid bool/callable property in Django 1.10,
-        # and an actual non-callable property in Django 2.0.
-        # For old versions, not calling it will result in false positives,
-        # so we have to be pretty explicit about these checks here.
-
-        if django.VERSION[0] == 2:
-            if user and user.is_authenticated:
-                created_by = user
-        else:  # TODO: Remove when Django <1.10 compat is dropped
-            if user and user.is_authenticated():
-                created_by = user
+        if user and user.is_authenticated:
+            created_by = user
 
         flog = FormLog(form_definition=self, data=form_data, created_by=created_by)
         flog.save()
@@ -194,7 +169,7 @@ class FormDefinition(models.Model):
         if template:  # We have a custom inline template string?
             # Assume the template string is HTML-ish if it has at least one opening
             # and closing HTML tag:
-            return (re.search(u"<[^>]+>", template) and re.search(u"</[^>]+>", template))
+            return (re.search("<[^>]+>", template) and re.search("</[^>]+>", template))
 
         # If there is no custom inline template, see if the `EMAIL_TEMPLATE`
         # setting points to a `.html` file:
@@ -209,7 +184,6 @@ class FormDefinition(models.Model):
         return name
 
 
-@python_2_unicode_compatible
 class FormDefinitionField(models.Model):
     form_definition = models.ForeignKey(FormDefinition, on_delete=models.CASCADE)
     field_class = models.CharField(_('field class'), max_length=100)
@@ -246,7 +220,7 @@ class FormDefinitionField(models.Model):
     def save(self, *args, **kwargs):
         if self.position is None:
             self.position = 0
-        super(FormDefinitionField, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def get_form_field_init_args(self):
         args = {
@@ -285,7 +259,7 @@ class FormDefinitionField(models.Model):
         if self.field_class in ('django.forms.ChoiceField', 'django.forms.MultipleChoiceField'):
             if self.choice_values:
                 choices = []
-                regex = re.compile('[\s]*\n[\s]*')
+                regex = re.compile('[\\s]*\n[\\s]*')
                 values = regex.split(self.choice_values)
                 labels = regex.split(self.choice_labels) if self.choice_labels else []
                 for index, value in enumerate(values):
@@ -319,7 +293,6 @@ class FormDefinitionField(models.Model):
         return (self.label or self.name)
 
 
-@python_2_unicode_compatible
 class FormLog(models.Model):
     form_definition = models.ForeignKey(FormDefinition, related_name='logs', on_delete=models.CASCADE)
     created = models.DateTimeField(_('Created'), auto_now=True)
@@ -331,7 +304,7 @@ class FormLog(models.Model):
         verbose_name_plural = _('form logs')
 
     def __str__(self):
-        return "%s (%s)" % (
+        return "{} ({})".format(
             self.form_definition.title or self.form_definition.name,
             self.created
         )
@@ -379,7 +352,7 @@ class FormLog(models.Model):
     data = property(get_data, set_data)
 
     def save(self, *args, **kwargs):
-        super(FormLog, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         if self._data:
             # safe form data and then clear temporary variable
             for value in self.values.all():
@@ -393,11 +366,10 @@ class FormLog(models.Model):
             self._data = None
 
 
-@python_2_unicode_compatible
 class FormValue(models.Model):
     form_log = models.ForeignKey(FormLog, related_name='values', on_delete=models.CASCADE)
     field_name = models.SlugField(_('field name'), max_length=255)
     value = PickledObjectField(_('value'), null=True, blank=True)
 
     def __str__(self):
-        return u'%s = %s' % (self.field_name, self.value)
+        return f'{self.field_name} = {self.value}'

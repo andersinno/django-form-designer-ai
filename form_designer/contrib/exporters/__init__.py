@@ -1,12 +1,12 @@
 from django.db.models import Count
-from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import force_str
+from django.utils.translation import gettext_lazy as _
 
 from form_designer import settings
 from form_designer.templatetags.friendly import friendly
 
 
-class ExporterBase(object):
+class ExporterBase:
 
     def __init__(self, model):
         self.model = model
@@ -70,7 +70,7 @@ class FormLogExporterBase(ExporterBase):
                 for field_name, field in fields.items():
                     header.append(field.label or field.name)
 
-                self.writerow([force_text(cell, encoding=settings.CSV_EXPORT_ENCODING) for cell in header])
+                self.writerow([force_str(cell, encoding=settings.CSV_EXPORT_ENCODING) for cell in header])
 
             for entry in queryset:
                 row = []
@@ -83,7 +83,7 @@ class FormLogExporterBase(ExporterBase):
                 name_to_value = {d['name']: d['value'] for d in entry.data}
                 for field in field_order:
                     value = friendly(name_to_value.get(field), null_value=settings.CSV_EXPORT_NULL_VALUE)
-                    value = force_text(value, encoding=settings.CSV_EXPORT_ENCODING)
+                    value = force_str(value, encoding=settings.CSV_EXPORT_ENCODING)
                     row.append(value)
 
                 self.writerow(row)

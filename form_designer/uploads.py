@@ -1,15 +1,11 @@
-from __future__ import unicode_literals
-
-import hashlib
 import os
-import uuid
+from types import SimpleNamespace
 
 from django.core.files.base import File
 from django.db.models.fields.files import FieldFile
 from django.forms.forms import NON_FIELD_ERRORS
 from django.template.defaultfilters import filesizeformat
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from form_designer import settings as app_settings
 from form_designer.utils import get_random_hash
@@ -68,14 +64,13 @@ def handle_uploaded_files(form_definition, form):
             filename = storage.get_available_name(
                 os.path.join(app_settings.FILE_STORAGE_DIR,
                              form_definition.name,
-                             '%s_%s%s' % (root, secret_hash, ext)))
+                             f'{root}_{secret_hash}{ext}'))
             storage.save(filename, uploaded_file)
-            form.cleaned_data[field.name] = StoredUploadedFile(filename)
+            form.cleaned_data[field.name] = StoredUploadedFile(name=filename)
             files.append(storage.path(filename))
     return files
 
 
-@python_2_unicode_compatible
 class StoredUploadedFile(FieldFile):
     """
     A wrapper for uploaded files that is compatible to the FieldFile class, i.e.
@@ -85,11 +80,8 @@ class StoredUploadedFile(FieldFile):
 
     def __init__(self, name):
         File.__init__(self, None, name)
-        self.field = self
-
-    @property
-    def storage(self):
-        return get_storage()
+        self.field = SimpleNamespace(storage=get_storage())
+        self.instance = None
 
     def save(self, *args, **kwargs):
         raise NotImplementedError('Static files are read-only')  # pragma: no cover

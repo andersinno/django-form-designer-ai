@@ -1,18 +1,13 @@
-
 import json
-from django.contrib import messages
-try:
-    from django.template.context_processors import csrf
-except ImportError:  # older Django
-    from django.core.context_processors import csrf
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
-from django.utils.six.moves.urllib.parse import urlencode
-from django.utils.six.moves.urllib.request import Request, urlopen
+from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render_to_response
-from django.template import RequestContext
+from django.shortcuts import get_object_or_404, render
+from django.template.context_processors import csrf
 from django.utils.module_loading import import_string
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from form_designer import settings as app_settings
 from form_designer.models import FormDefinition
@@ -142,8 +137,7 @@ def _form_detail_view(request, form_definition):
     result.update({
         'form_template': form_definition.form_template_name or app_settings.DEFAULT_FORM_TEMPLATE
     })
-    return render_to_response('html/formdefinition/detail.html', result,
-                              context_instance=RequestContext(request))
+    return render('html/formdefinition/detail.html', result)
 
 
 def detail(request, object_name):

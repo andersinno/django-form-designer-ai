@@ -1,6 +1,4 @@
-# encoding=utf8
-
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name='django-form-designer-ai',
@@ -24,7 +22,7 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
     ],
     install_requires=[
-        'django-picklefield>=0.3.2,<0.4',
+        'django-picklefield',
     ],
     zip_safe=False,
 )

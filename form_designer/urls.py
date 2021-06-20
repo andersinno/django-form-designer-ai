@@ -1,6 +1,6 @@
-from django.conf.urls import url
+from django.urls import path
 
 urlpatterns = [
-    url(r'^(?P<object_name>[-\w]+)/$', 'form_designer.views.detail', name='form_designer_detail'),
-    url(r'^h/(?P<public_hash>[-\w]+)/$', 'form_designer.views.detail_by_hash', name='form_designer_detail_by_hash'),
+    path('<slug:object_name>/', 'form_designer.views.detail', name='form_designer_detail'),
+    path('h/<slug:public_hash>/', 'form_designer.views.detail_by_hash', name='form_designer_detail_by_hash'),
 ]

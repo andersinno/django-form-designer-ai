@@ -1,10 +1,9 @@
-from __future__ import unicode_literals
-
 from django import forms
+from django.apps import apps
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class ModelNameFormField(forms.CharField):
@@ -13,8 +12,8 @@ class ModelNameFormField(forms.CharField):
     def get_model_from_string(model_path):
         try:
             app_label, model_name = model_path.rsplit('.models.')
-            return models.get_model(app_label, model_name)
-        except:
+            return apps.get_model(app_label, model_name)
+        except (ValueError, LookupError):
             return None
 
     def clean(self, value):
@@ -22,9 +21,9 @@ class ModelNameFormField(forms.CharField):
         Validates that the input matches the regular expression. Returns a
         string object.
         """
-        value = super(ModelNameFormField, self).clean(value)
+        value = super().clean(value)
         if value in validators.EMPTY_VALUES:
-            return u''
+            return ''
         if not ModelNameFormField.get_model_from_string(value):
             raise ValidationError(
                 _('Model could not be imported: %(value)s. Please use a valid model path.'),
@@ -45,7 +44,7 @@ class ModelNameField(models.CharField):
         # while letting the caller override them.
         defaults = {'form_class': ModelNameFormField}
         defaults.update(kwargs)
-        return super(ModelNameField, self).formfield(**defaults)
+        return super().formfield(**defaults)
 
 
 class TemplateFormField(forms.CharField):
@@ -54,7 +53,7 @@ class TemplateFormField(forms.CharField):
         """
         Validates that the input can be compiled as a template.
         """
-        value = super(TemplateFormField, self).clean(value)
+        value = super().clean(value)
         from django.template import Template, TemplateSyntaxError
         if value:
             try:
@@ -71,7 +70,7 @@ class TemplateCharField(models.CharField):
         # while letting the caller override them.
         defaults = {'form_class': TemplateFormField}
         defaults.update(kwargs)
-        return super(TemplateCharField, self).formfield(**defaults)
+        return super().formfield(**defaults)
 
 
 class TemplateTextField(models.TextField):
@@ -81,7 +80,7 @@ class TemplateTextField(models.TextField):
         # while letting the caller override them.
         defaults = {'form_class': TemplateFormField}
         defaults.update(kwargs)
-        return super(TemplateTextField, self).formfield(**defaults)
+        return super().formfield(**defaults)
 
 
 class RegexpExpressionFormField(forms.CharField):
@@ -90,9 +89,9 @@ class RegexpExpressionFormField(forms.CharField):
         """
         Validates that the input can be compiled as a Regular Expression.
         """
-        value = super(RegexpExpressionFormField, self).clean(value)
+        value = super().clean(value)
         if value in validators.EMPTY_VALUES:
-            value = u''
+            value = ''
         import re
         try:
             re.compile(value)
@@ -108,4 +107,4 @@ class RegexpExpressionField(models.CharField):
         # while letting the caller override them.
         defaults = {'form_class': RegexpExpressionFormField}
         defaults.update(kwargs)
-        return super(RegexpExpressionField, self).formfield(**defaults)
+        return super().formfield(**defaults)

@@ -1,7 +1,7 @@
+import pytest
 from django.forms.models import model_to_dict
 from django.utils.crypto import get_random_string
 
-import pytest
 from form_designer.models import FormDefinition
 
 
@@ -18,7 +18,7 @@ def test_admin_create_view_renders(admin_client):
 @pytest.mark.django_db
 @pytest.mark.parametrize("n_fields", range(5))
 def test_admin_create_view_creates_form(admin_client, n_fields):
-    name = get_random_string()
+    name = get_random_string(12)
     data = {
         '_save': 'Save',
         'action': '',
@@ -96,4 +96,4 @@ def test_admin_create_view_renders(admin_client, greeting_form_with_log):
 @pytest.mark.django_db
 @pytest.mark.parametrize('format', ('CSV', 'XLS'))
 def test_admin_export_view(admin_client, greeting_form_with_log, format):
-    assert admin_client.get("/admin/form_designer/formlog/export/%s/" % format).content
+    assert admin_client.get(f"/admin/form_designer/formlog/export/{format}/").content

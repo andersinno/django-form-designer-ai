@@ -1,19 +1,12 @@
-from __future__ import unicode_literals
-
-from django.conf.urls import url
 from django.contrib import admin
 from django.http import Http404
+from django.urls import re_path, reverse
 from django.utils.module_loading import import_string
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from form_designer import settings
 from form_designer.forms import FormDefinitionFieldInlineForm, FormDefinitionForm
 from form_designer.models import FormDefinition, FormDefinitionField, FormLog
-
-try:
-    from django.urls import reverse
-except ImportError:
-    from django.core.urlresolvers import reverse
 
 
 class FormDefinitionFieldInline(admin.StackedInline):
@@ -66,7 +59,7 @@ class FormLogAdmin(admin.ModelAdmin):
         return self.__class__.exporter_classes_ordered
 
     def get_actions(self, request):
-        actions = super(FormLogAdmin, self).get_actions(request)
+        actions = super().get_actions(request)
 
         for cls in self.get_exporter_classes():
             desc = _("Export selected %%(verbose_name_plural)s as %s") % cls.export_format()
@@ -76,13 +69,13 @@ class FormLogAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = [
-            url(
+            re_path(
                 r'^export/(?P<format>[a-zA-Z0-9_-]+)/$',
                 self.admin_site.admin_view(self.export_view),
                 name='form_designer_export'
             ),
         ]
-        return urls + super(FormLogAdmin, self).get_urls()
+        return urls + super().get_urls()
 
     def data_html(self, obj):
         return obj.form_definition.compile_message(obj.data, 'html/formdefinition/data_message.html')
@@ -107,8 +100,6 @@ class FormLogAdmin(admin.ModelAdmin):
                             self.list_per_page, self.list_max_show_all, self.list_editable,
                             self)
 
-            if hasattr(cl, "get_query_set"):  # Old Django versions
-                return cl.get_query_set(request)
         return cl.get_queryset(request)
 
     def export_view(self, request, format):
@@ -127,7 +118,7 @@ class FormLogAdmin(admin.ModelAdmin):
 
         extra_context['exporters'] = exporter_links
 
-        return super(FormLogAdmin, self).changelist_view(request, extra_context)
+        return super().changelist_view(request, extra_context)
 
 
 admin.site.register(FormDefinition, FormDefinitionAdmin)

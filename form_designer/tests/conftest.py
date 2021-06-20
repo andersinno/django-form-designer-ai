@@ -8,7 +8,7 @@ from form_designer.models import FormLog
 def greeting_form():
     from form_designer.models import FormDefinition, FormDefinitionField
     fd = FormDefinition.objects.create(
-        name=get_random_string(),
+        name=get_random_string(12),
         mail_to='test@example.com',
         mail_subject='Someone sent you a greeting: {{ greeting }}',
         mail_reply_to='Greeting Bot <greetingbot@example.com>',
@@ -35,5 +35,5 @@ def greeting_form_with_log(admin_user, greeting_form):
         form_definition=greeting_form,
         created_by=admin_user,
     )
-    log.values.create(field_name='greeting', value=get_random_string())
+    log.values.create(field_name='greeting', value=get_random_string(12))
     return greeting_form
