@@ -1,6 +1,4 @@
-import hashlib
 import os
-import uuid
 
 from django.core.files.base import File
 from django.db.models.fields.files import FieldFile
@@ -9,7 +7,6 @@ from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
 
 from form_designer import settings as app_settings
-from form_designer.models import python_2_unicode_compatible
 from form_designer.utils import get_random_hash
 
 
@@ -73,7 +70,6 @@ def handle_uploaded_files(form_definition, form):
     return files
 
 
-@python_2_unicode_compatible
 class StoredUploadedFile(FieldFile):
     """
     A wrapper for uploaded files that is compatible to the FieldFile class, i.e.

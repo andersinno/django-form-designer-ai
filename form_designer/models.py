@@ -15,15 +15,7 @@ from form_designer.fields import ModelNameField, RegexpExpressionField, Template
 from form_designer.utils import get_random_hash, string_template_replace
 from picklefield.fields import PickledObjectField
 
-try:
-    from django.urls import reverse
-except ImportError:
-    from django.core.urlresolvers import reverse
-
-try:
-    from django.utils.six import python_2_unicode_compatible
-except ImportError:
-    from six import python_2_unicode_compatible
+from django.urls import reverse
 
 MAIL_TEMPLATE_CONTEXT_HELP_TEXT = _(
     'Your form fields are available as template context. '
