@@ -1,11 +1,6 @@
 import os
 from tempfile import gettempdir
 
-try:
-    import cms
-except ImportError:
-    cms = None
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '&nsa)3w(oz6^a1e-dj+iw9=jqps6az(&l2khgqtr)%%sj8ky@('
 DEBUG = True
@@ -33,18 +28,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'dfd_tests',
     'form_designer',
-]
-
-if cms:
-    INSTALLED_APPS.extend([
-        'menus',
-        'cms',
-        'treebeard',
-        'form_designer.contrib.cms_plugins.form_designer_form',
-    ])
-
-CMS_TEMPLATES = [
-    ('page.html', 'page'),
 ]
 
 MIDDLEWARE = [
