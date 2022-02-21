@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='django-form-designer-kcs',
-    version='1.1.0',
+    version='1.2.0',
     url='http://github.com/kcsry/django-form-designer',
     license='BSD',
     packages=find_packages('.', include=[
