@@ -6,15 +6,19 @@ import form_designer.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('form_designer', '0001_initial'),
+        ("form_designer", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='formdefinition',
-            name='mail_reply_to',
-            field=form_designer.fields.TemplateCharField(blank=True, help_text='Your form fields are available as template context. Example: "{{ first_name }} {{ last_name }} <{{ from_email }}>" if you have fields named `first_name`, `last_name`, `from_email`.', max_length=255, verbose_name='reply-to address'),
+            model_name="formdefinition",
+            name="mail_reply_to",
+            field=form_designer.fields.TemplateCharField(
+                blank=True,
+                help_text='Your form fields are available as template context. Example: "{{ first_name }} {{ last_name }} <{{ from_email }}>" if you have fields named `first_name`, `last_name`, `from_email`.',
+                max_length=255,
+                verbose_name="reply-to address",
+            ),
         ),
     ]

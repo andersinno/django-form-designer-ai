@@ -1,0 +1,56 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "django-form-designer-kcs"
+dynamic = ["version"]
+readme = "README.rst"
+license = "BSD-3-Clause"
+requires-python = ">=3.8"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Framework :: Django",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Topic :: Internet :: WWW/HTTP",
+]
+dependencies = [
+  "django>=4.0",
+  "django-picklefield",
+]
+
+[project.urls]
+Homepage = "http://github.com/kcsry/django-form-designer"
+
+[tool.hatch.version]
+path = "form_designer/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = ["/form_designer"]
+
+[tool.pytest.ini_options]
+django_settings_module = "dfd_tests.settings"
+norecursedirs = ["bower_components", "node_modules", ".git", "venv*"]
+doctest_optionflags = [
+  "NORMALIZE_WHITESPACE",
+  "IGNORE_EXCEPTION_DETAIL",
+  "ALLOW_UNICODE"
+]
+filterwarnings = [
+  "ignore:.+default_app_config.+",
+  "once::DeprecationWarning",
+  "once::PendingDeprecationWarning",
+  "ignore:.+PickledObjectField.from_db_value.+"
+]
+
+[tool.ruff]
+exclude = ["migrations", "node_modules", ".tox"]
+ignore = []
+line-length = 120
+select = ["C9", "E", "F", "W", "I"]
+
+[tool.ruff.mccabe]
+max-complexity = 10

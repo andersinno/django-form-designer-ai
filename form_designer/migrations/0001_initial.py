@@ -9,7 +9,6 @@ import form_designer.fields
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -18,90 +17,422 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='FormDefinition',
+            name="FormDefinition",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.SlugField(max_length=255, unique=True, verbose_name='name')),
-                ('require_hash', models.BooleanField(default=False, help_text='If enabled, the form can only be reached via a secret URL.', verbose_name='obfuscate URL to this form')),
-                ('private_hash', models.CharField(default='', editable=False, max_length=40)),
-                ('public_hash', models.CharField(default='', editable=False, max_length=40)),
-                ('title', models.CharField(blank=True, max_length=255, null=True, verbose_name='title')),
-                ('body', models.TextField(blank=True, null=True, verbose_name='body', help_text='Form description. Display on form after title.')),
-                ('action', models.URLField(blank=True, help_text='If you leave this empty, the page where the form resides will be requested, and you can use the mail form and logging features. You can also send data to external sites: For instance, enter "http://www.google.ch/search" to create a search form.', max_length=255, null=True, verbose_name='target URL')),
-                ('mail_to', form_designer.fields.TemplateCharField(blank=True, help_text='Separate several addresses with a comma. Your form fields are available as template context. Example: "admin@domain.com, {{ from_email }}" if you have a field named `from_email`.', max_length=255, null=True, verbose_name='send form data to e-mail address')),
-                ('mail_from', form_designer.fields.TemplateCharField(blank=True, help_text='Your form fields are available as template context. Example: "{{ first_name }} {{ last_name }} <{{ from_email }}>" if you have fields named `first_name`, `last_name`, `from_email`.', max_length=255, null=True, verbose_name='sender address')),
-                ('mail_subject', form_designer.fields.TemplateCharField(blank=True, help_text='Your form fields are available as template context. Example: "Contact form {{ subject }}" if you have a field named `subject`.', max_length=255, null=True, verbose_name='email subject')),
-                ('mail_uploaded_files', models.BooleanField(default=True, verbose_name='Send uploaded files as email attachments')),
-                ('method', models.CharField(choices=[('POST', 'POST'), ('GET', 'GET')], default='POST', max_length=10, verbose_name='method')),
-                ('success_message', models.CharField(blank=True, max_length=255, null=True, verbose_name='success message')),
-                ('error_message', models.CharField(blank=True, max_length=255, null=True, verbose_name='error message')),
-                ('submit_label', models.CharField(blank=True, max_length=255, null=True, verbose_name='submit button label')),
-                ('log_data', models.BooleanField(default=True, help_text='Logs all form submissions to the database.', verbose_name='log form data')),
-                ('save_uploaded_files', models.BooleanField(default=True, help_text='Saves all uploaded files using server storage.', verbose_name='save uploaded files')),
-                ('success_redirect', models.BooleanField(default=True, verbose_name='HTTP redirect after successful submission')),
-                ('success_clear', models.BooleanField(default=True, verbose_name='clear form after successful submission')),
-                ('allow_get_initial', models.BooleanField(default=True, help_text='If enabled, you can fill in form fields by adding them to the query string.', verbose_name='allow initial values via URL')),
-                ('message_template', form_designer.fields.TemplateTextField(blank=True, help_text='Your form fields are available as template context. Example: "{{ message }}" if you have a field named `message`. To iterate over all fields, use the variable `data` (a list containing a dictionary for each form field, each containing the elements `name`, `label`, `value`).', null=True, verbose_name='message template')),
-                ('form_template_name', models.CharField(blank=True, max_length=255, null=True, verbose_name='form template')),
-                ('display_logged', models.BooleanField(default=False, verbose_name='display logged submissions with form')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.SlugField(max_length=255, unique=True, verbose_name="name"),
+                ),
+                (
+                    "require_hash",
+                    models.BooleanField(
+                        default=False,
+                        help_text="If enabled, the form can only be reached via a secret URL.",
+                        verbose_name="obfuscate URL to this form",
+                    ),
+                ),
+                (
+                    "private_hash",
+                    models.CharField(default="", editable=False, max_length=40),
+                ),
+                (
+                    "public_hash",
+                    models.CharField(default="", editable=False, max_length=40),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        blank=True, max_length=255, null=True, verbose_name="title"
+                    ),
+                ),
+                (
+                    "body",
+                    models.TextField(
+                        blank=True,
+                        null=True,
+                        verbose_name="body",
+                        help_text="Form description. Display on form after title.",
+                    ),
+                ),
+                (
+                    "action",
+                    models.URLField(
+                        blank=True,
+                        help_text='If you leave this empty, the page where the form resides will be requested, and you can use the mail form and logging features. You can also send data to external sites: For instance, enter "http://www.google.ch/search" to create a search form.',
+                        max_length=255,
+                        null=True,
+                        verbose_name="target URL",
+                    ),
+                ),
+                (
+                    "mail_to",
+                    form_designer.fields.TemplateCharField(
+                        blank=True,
+                        help_text='Separate several addresses with a comma. Your form fields are available as template context. Example: "admin@domain.com, {{ from_email }}" if you have a field named `from_email`.',
+                        max_length=255,
+                        null=True,
+                        verbose_name="send form data to e-mail address",
+                    ),
+                ),
+                (
+                    "mail_from",
+                    form_designer.fields.TemplateCharField(
+                        blank=True,
+                        help_text='Your form fields are available as template context. Example: "{{ first_name }} {{ last_name }} <{{ from_email }}>" if you have fields named `first_name`, `last_name`, `from_email`.',
+                        max_length=255,
+                        null=True,
+                        verbose_name="sender address",
+                    ),
+                ),
+                (
+                    "mail_subject",
+                    form_designer.fields.TemplateCharField(
+                        blank=True,
+                        help_text='Your form fields are available as template context. Example: "Contact form {{ subject }}" if you have a field named `subject`.',
+                        max_length=255,
+                        null=True,
+                        verbose_name="email subject",
+                    ),
+                ),
+                (
+                    "mail_uploaded_files",
+                    models.BooleanField(
+                        default=True,
+                        verbose_name="Send uploaded files as email attachments",
+                    ),
+                ),
+                (
+                    "method",
+                    models.CharField(
+                        choices=[("POST", "POST"), ("GET", "GET")],
+                        default="POST",
+                        max_length=10,
+                        verbose_name="method",
+                    ),
+                ),
+                (
+                    "success_message",
+                    models.CharField(
+                        blank=True,
+                        max_length=255,
+                        null=True,
+                        verbose_name="success message",
+                    ),
+                ),
+                (
+                    "error_message",
+                    models.CharField(
+                        blank=True,
+                        max_length=255,
+                        null=True,
+                        verbose_name="error message",
+                    ),
+                ),
+                (
+                    "submit_label",
+                    models.CharField(
+                        blank=True,
+                        max_length=255,
+                        null=True,
+                        verbose_name="submit button label",
+                    ),
+                ),
+                (
+                    "log_data",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Logs all form submissions to the database.",
+                        verbose_name="log form data",
+                    ),
+                ),
+                (
+                    "save_uploaded_files",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Saves all uploaded files using server storage.",
+                        verbose_name="save uploaded files",
+                    ),
+                ),
+                (
+                    "success_redirect",
+                    models.BooleanField(
+                        default=True,
+                        verbose_name="HTTP redirect after successful submission",
+                    ),
+                ),
+                (
+                    "success_clear",
+                    models.BooleanField(
+                        default=True,
+                        verbose_name="clear form after successful submission",
+                    ),
+                ),
+                (
+                    "allow_get_initial",
+                    models.BooleanField(
+                        default=True,
+                        help_text="If enabled, you can fill in form fields by adding them to the query string.",
+                        verbose_name="allow initial values via URL",
+                    ),
+                ),
+                (
+                    "message_template",
+                    form_designer.fields.TemplateTextField(
+                        blank=True,
+                        help_text='Your form fields are available as template context. Example: "{{ message }}" if you have a field named `message`. To iterate over all fields, use the variable `data` (a list containing a dictionary for each form field, each containing the elements `name`, `label`, `value`).',
+                        null=True,
+                        verbose_name="message template",
+                    ),
+                ),
+                (
+                    "form_template_name",
+                    models.CharField(
+                        blank=True,
+                        max_length=255,
+                        null=True,
+                        verbose_name="form template",
+                    ),
+                ),
+                (
+                    "display_logged",
+                    models.BooleanField(
+                        default=False,
+                        verbose_name="display logged submissions with form",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Form',
-                'verbose_name_plural': 'Forms',
+                "verbose_name": "Form",
+                "verbose_name_plural": "Forms",
             },
         ),
         migrations.CreateModel(
-            name='FormDefinitionField',
+            name="FormDefinitionField",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('field_class', models.CharField(max_length=100, verbose_name='field class')),
-                ('position', models.IntegerField(blank=True, null=True, verbose_name='position')),
-                ('name', models.SlugField(max_length=255, verbose_name='name')),
-                ('label', models.CharField(blank=True, max_length=255, null=True, verbose_name='label')),
-                ('required', models.BooleanField(default=True, verbose_name='required')),
-                ('include_result', models.BooleanField(default=True, help_text='If this is disabled, the field value will not be included in logs and e-mails generated from form data.', verbose_name='include in result')),
-                ('widget', models.CharField(blank=True, default='', max_length=255, null=True, verbose_name='widget')),
-                ('initial', models.TextField(blank=True, null=True, verbose_name='initial value')),
-                ('help_text', models.CharField(blank=True, max_length=255, null=True, verbose_name='help text')),
-                ('choice_values', models.TextField(blank=True, help_text='One value per line', null=True, verbose_name='values')),
-                ('choice_labels', models.TextField(blank=True, help_text='One label per line', null=True, verbose_name='labels')),
-                ('max_length', models.IntegerField(blank=True, null=True, verbose_name='max. length')),
-                ('min_length', models.IntegerField(blank=True, null=True, verbose_name='min. length')),
-                ('max_value', models.FloatField(blank=True, null=True, verbose_name='max. value')),
-                ('min_value', models.FloatField(blank=True, null=True, verbose_name='min. value')),
-                ('max_digits', models.IntegerField(blank=True, null=True, verbose_name='max. digits')),
-                ('decimal_places', models.IntegerField(blank=True, null=True, verbose_name='decimal places')),
-                ('regex', form_designer.fields.RegexpExpressionField(blank=True, max_length=255, null=True, verbose_name='regular Expression')),
-                ('choice_model', form_designer.fields.ModelNameField(blank=True, max_length=255, null=True, verbose_name='data model')),
-                ('choice_model_empty_label', models.CharField(blank=True, max_length=255, null=True, verbose_name='empty label')),
-                ('form_definition', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='form_designer.FormDefinition')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "field_class",
+                    models.CharField(max_length=100, verbose_name="field class"),
+                ),
+                (
+                    "position",
+                    models.IntegerField(blank=True, null=True, verbose_name="position"),
+                ),
+                ("name", models.SlugField(max_length=255, verbose_name="name")),
+                (
+                    "label",
+                    models.CharField(
+                        blank=True, max_length=255, null=True, verbose_name="label"
+                    ),
+                ),
+                (
+                    "required",
+                    models.BooleanField(default=True, verbose_name="required"),
+                ),
+                (
+                    "include_result",
+                    models.BooleanField(
+                        default=True,
+                        help_text="If this is disabled, the field value will not be included in logs and e-mails generated from form data.",
+                        verbose_name="include in result",
+                    ),
+                ),
+                (
+                    "widget",
+                    models.CharField(
+                        blank=True,
+                        default="",
+                        max_length=255,
+                        null=True,
+                        verbose_name="widget",
+                    ),
+                ),
+                (
+                    "initial",
+                    models.TextField(
+                        blank=True, null=True, verbose_name="initial value"
+                    ),
+                ),
+                (
+                    "help_text",
+                    models.CharField(
+                        blank=True, max_length=255, null=True, verbose_name="help text"
+                    ),
+                ),
+                (
+                    "choice_values",
+                    models.TextField(
+                        blank=True,
+                        help_text="One value per line",
+                        null=True,
+                        verbose_name="values",
+                    ),
+                ),
+                (
+                    "choice_labels",
+                    models.TextField(
+                        blank=True,
+                        help_text="One label per line",
+                        null=True,
+                        verbose_name="labels",
+                    ),
+                ),
+                (
+                    "max_length",
+                    models.IntegerField(
+                        blank=True, null=True, verbose_name="max. length"
+                    ),
+                ),
+                (
+                    "min_length",
+                    models.IntegerField(
+                        blank=True, null=True, verbose_name="min. length"
+                    ),
+                ),
+                (
+                    "max_value",
+                    models.FloatField(blank=True, null=True, verbose_name="max. value"),
+                ),
+                (
+                    "min_value",
+                    models.FloatField(blank=True, null=True, verbose_name="min. value"),
+                ),
+                (
+                    "max_digits",
+                    models.IntegerField(
+                        blank=True, null=True, verbose_name="max. digits"
+                    ),
+                ),
+                (
+                    "decimal_places",
+                    models.IntegerField(
+                        blank=True, null=True, verbose_name="decimal places"
+                    ),
+                ),
+                (
+                    "regex",
+                    form_designer.fields.RegexpExpressionField(
+                        blank=True,
+                        max_length=255,
+                        null=True,
+                        verbose_name="regular Expression",
+                    ),
+                ),
+                (
+                    "choice_model",
+                    form_designer.fields.ModelNameField(
+                        blank=True, max_length=255, null=True, verbose_name="data model"
+                    ),
+                ),
+                (
+                    "choice_model_empty_label",
+                    models.CharField(
+                        blank=True,
+                        max_length=255,
+                        null=True,
+                        verbose_name="empty label",
+                    ),
+                ),
+                (
+                    "form_definition",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="form_designer.FormDefinition",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'field',
-                'verbose_name_plural': 'fields',
-                'ordering': ['position'],
+                "verbose_name": "field",
+                "verbose_name_plural": "fields",
+                "ordering": ["position"],
             },
         ),
         migrations.CreateModel(
-            name='FormLog',
+            name="FormLog",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now=True, verbose_name='Created')),
-                ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('form_definition', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='logs', to='form_designer.FormDefinition')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    models.DateTimeField(auto_now=True, verbose_name="Created"),
+                ),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "form_definition",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="logs",
+                        to="form_designer.FormDefinition",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'form log',
-                'verbose_name_plural': 'form logs',
-            }
+                "verbose_name": "form log",
+                "verbose_name_plural": "form logs",
+            },
         ),
         migrations.CreateModel(
-            name='FormValue',
+            name="FormValue",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('field_name', models.SlugField(max_length=255, verbose_name='field name')),
-                ('value', picklefield.fields.PickledObjectField(blank=True, editable=False, null=True, verbose_name='value')),
-                ('form_log', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='values', to='form_designer.FormLog')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "field_name",
+                    models.SlugField(max_length=255, verbose_name="field name"),
+                ),
+                (
+                    "value",
+                    picklefield.fields.PickledObjectField(
+                        blank=True, editable=False, null=True, verbose_name="value"
+                    ),
+                ),
+                (
+                    "form_log",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="values",
+                        to="form_designer.FormLog",
+                    ),
+                ),
             ],
         ),
     ]

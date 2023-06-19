@@ -1,5 +1,5 @@
 name: CI
-'on':
+"on":
   push:
     branches:
       - master
@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python-version: ['3.6', '3.7', '3.8']
-        DATABASE: ['mysql', 'sqlite']
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        DATABASE: ["mysql", "sqlite"]
     steps:
-      - name: 'Set up Python ${{ matrix.python-version }}'
+      - name: "Set up Python ${{ matrix.python-version }}"
         uses: actions/setup-python@v2
         with:
-          python-version: '${{ matrix.python-version }}'
+          python-version: "${{ matrix.python-version }}"
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
         with:
@@ -26,9 +26,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
       - run: pip install -U pip
-      - run: pip install 'tox>=3.4.0' tox-gh-actions codecov
-      - run: tox -vv -r
+      - run: pip install 'tox>=4.6.0' tox-gh-actions codecov
+      - run: tox -v
         env:
           DATABASE_USER: root
           DATABASE_PASSWORD: root
+          DJANGO_SETTINGS_MODULE: dfd_tests.settings
       - run: codecov -e TRAVIS_PYTHON_VERSION -e DATABASE

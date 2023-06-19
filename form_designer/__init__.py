@@ -1,1 +1,1 @@
-default_app_config = 'form_designer.apps.FormDesignerConfig'
+__version__ = "2.1.0"
