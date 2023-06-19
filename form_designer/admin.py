@@ -14,38 +14,84 @@ class FormDefinitionFieldInline(admin.StackedInline):
     model = FormDefinitionField
     extra = 1
     fieldsets = [
-        (_('Basic'), {'fields': ['name', 'field_class', 'required', 'initial']}),
-        (_('Display'), {'fields': ['label', 'widget', 'help_text', 'position', 'include_result']}),
-        (_('Text'), {'fields': ['max_length', 'min_length']}),
-        (_('Numbers'), {'fields': ['max_value', 'min_value', 'max_digits', 'decimal_places']}),
-        (_('Regex'), {'fields': ['regex']}),
-        (_('Choices'), {'fields': ['choice_values', 'choice_labels']}),
-        (_('Model Choices'), {'fields': ['choice_model', 'choice_model_empty_label']}),
+        (_("Basic"), {"fields": ["name", "field_class", "required", "initial"]}),
+        (
+            _("Display"),
+            {"fields": ["label", "widget", "help_text", "position", "include_result"]},
+        ),
+        (_("Text"), {"fields": ["max_length", "min_length"]}),
+        (
+            _("Numbers"),
+            {"fields": ["max_value", "min_value", "max_digits", "decimal_places"]},
+        ),
+        (_("Regex"), {"fields": ["regex"]}),
+        (_("Choices"), {"fields": ["choice_values", "choice_labels"]}),
+        (_("Model Choices"), {"fields": ["choice_model", "choice_model_empty_label"]}),
     ]
 
 
 class FormDefinitionAdmin(admin.ModelAdmin):
     save_as = True
     fieldsets = [
-        (_('Basic'), {'fields': ['name', 'require_hash', 'method', 'action', 'title', 'body']}),
-        (_('Settings'), {'fields': ['allow_get_initial', 'log_data', 'success_redirect', 'success_clear', 'display_logged', 'save_uploaded_files'], 'classes': ['collapse']}),
-        (_('Mail form'), {'fields': ['mail_to', 'mail_from', 'mail_subject', 'mail_uploaded_files', 'mail_cover_text'], 'classes': ['collapse']}),
-        (_('Templates'), {'fields': ['message_template', 'form_template_name'], 'classes': ['collapse']}),
-        (_('Messages'), {'fields': ['success_message', 'error_message', 'submit_label'], 'classes': ['collapse']}),
+        (
+            _("Basic"),
+            {"fields": ["name", "require_hash", "method", "action", "title", "body"]},
+        ),
+        (
+            _("Settings"),
+            {
+                "fields": [
+                    "allow_get_initial",
+                    "log_data",
+                    "success_redirect",
+                    "success_clear",
+                    "display_logged",
+                    "save_uploaded_files",
+                ],
+                "classes": ["collapse"],
+            },
+        ),
+        (
+            _("Mail form"),
+            {
+                "fields": [
+                    "mail_to",
+                    "mail_from",
+                    "mail_subject",
+                    "mail_uploaded_files",
+                    "mail_cover_text",
+                ],
+                "classes": ["collapse"],
+            },
+        ),
+        (
+            _("Templates"),
+            {
+                "fields": ["message_template", "form_template_name"],
+                "classes": ["collapse"],
+            },
+        ),
+        (
+            _("Messages"),
+            {
+                "fields": ["success_message", "error_message", "submit_label"],
+                "classes": ["collapse"],
+            },
+        ),
     ]
-    list_display = ('name', 'title', 'method', 'count_fields')
+    list_display = ("name", "title", "method", "count_fields")
     form = FormDefinitionForm
     inlines = [
         FormDefinitionFieldInline,
     ]
-    search_fields = ('name', 'title')
+    search_fields = ("name", "title")
 
 
 class FormLogAdmin(admin.ModelAdmin):
-    list_display = ('form_definition', 'created', 'id', 'created_by', 'data_html')
-    list_filter = ('form_definition',)
+    list_display = ("form_definition", "created", "id", "created_by", "data_html")
+    list_filter = ("form_definition",)
     list_display_links = None
-    date_hierarchy = 'created'
+    date_hierarchy = "created"
 
     exporter_classes = {}
     exporter_classes_ordered = []
@@ -62,7 +108,10 @@ class FormLogAdmin(admin.ModelAdmin):
         actions = super().get_actions(request)
 
         for cls in self.get_exporter_classes():
-            desc = _("Export selected %%(verbose_name_plural)s as %s") % cls.export_format()
+            desc = (
+                _("Export selected %%(verbose_name_plural)s as %s")
+                % cls.export_format()
+            )
             actions[cls.export_format()] = (cls.export_view, cls.export_format(), desc)
 
         return actions
@@ -70,23 +119,26 @@ class FormLogAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = [
             re_path(
-                r'^export/(?P<format>[a-zA-Z0-9_-]+)/$',
+                r"^export/(?P<format>[a-zA-Z0-9_-]+)/$",
                 self.admin_site.admin_view(self.export_view),
-                name='form_designer_export'
+                name="form_designer_export",
             ),
         ]
         return urls + super().get_urls()
 
     def data_html(self, obj):
-        return obj.form_definition.compile_message(obj.data, 'html/formdefinition/data_message.html')
+        return obj.form_definition.compile_message(
+            obj.data, "html/formdefinition/data_message.html"
+        )
+
     data_html.allow_tags = True
-    data_html.short_description = _('Data')
+    data_html.short_description = _("Data")
 
     def get_change_list_query_set(self, request, extra_context=None):
         """
         The 'change list' admin view for this model.
         """
-        if hasattr(self, 'get_changelist_instance'):  # Available on Django 2.0+
+        if hasattr(self, "get_changelist_instance"):  # Available on Django 2.0+
             cl = self.get_changelist_instance(request)
         else:
             list_display = self.get_list_display(request)
@@ -94,11 +146,20 @@ class FormLogAdmin(admin.ModelAdmin):
             list_filter = self.get_list_filter(request)
             ChangeList = self.get_changelist(request)
 
-            cl = ChangeList(request, self.model, list_display,
-                            list_display_links, list_filter, self.date_hierarchy,
-                            self.search_fields, self.list_select_related,
-                            self.list_per_page, self.list_max_show_all, self.list_editable,
-                            self)
+            cl = ChangeList(
+                request,
+                self.model,
+                list_display,
+                list_display_links,
+                list_filter,
+                self.date_hierarchy,
+                self.search_fields,
+                self.list_select_related,
+                self.list_per_page,
+                self.list_max_show_all,
+                self.list_editable,
+                self,
+            )
 
         return cl.get_queryset(request)
 
@@ -110,13 +171,18 @@ class FormLogAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
-        query_string = '?' + request.META.get('QUERY_STRING', '')
+        query_string = "?" + request.META.get("QUERY_STRING", "")
         exporter_links = []
         for cls in self.get_exporter_classes():
-            url = reverse('admin:form_designer_export', args=(cls.export_format(),)) + query_string
-            exporter_links.append({'url': url, 'label': _('Export view as %s') % cls.export_format()})
+            url = (
+                reverse("admin:form_designer_export", args=(cls.export_format(),))
+                + query_string
+            )
+            exporter_links.append(
+                {"url": url, "label": _("Export view as %s") % cls.export_format()}
+            )
 
-        extra_context['exporters'] = exporter_links
+        extra_context["exporters"] = exporter_links
 
         return super().changelist_view(request, extra_context)
 

@@ -7,7 +7,6 @@ from form_designer.templatetags.friendly import friendly
 
 
 class ExporterBase:
-
     def __init__(self, model):
         self.model = model
 
@@ -40,11 +39,12 @@ class ExporterBase:
 
 
 class FormLogExporterBase(ExporterBase):
-
     def export(self, request, queryset=None):
         self.init_response()
         self.init_writer()
-        distinct_forms = queryset.aggregate(Count('form_definition', distinct=True))['form_definition__count']
+        distinct_forms = queryset.aggregate(Count("form_definition", distinct=True))[
+            "form_definition__count"
+        ]
 
         include_created = settings.CSV_EXPORT_INCLUDE_CREATED
         include_pk = settings.CSV_EXPORT_INCLUDE_PK
@@ -57,11 +57,11 @@ class FormLogExporterBase(ExporterBase):
             if include_header:
                 header = []
                 if include_form:
-                    header.append(_('Form'))
+                    header.append(_("Form"))
                 if include_created:
-                    header.append(_('Created'))
+                    header.append(_("Created"))
                 if include_pk:
-                    header.append(_('ID'))
+                    header.append(_("ID"))
                 # Form fields might have been changed and not match
                 # existing form logs anymore.
                 # Hence, use current form definition for header.
@@ -70,7 +70,12 @@ class FormLogExporterBase(ExporterBase):
                 for field_name, field in fields.items():
                     header.append(field.label or field.name)
 
-                self.writerow([force_str(cell, encoding=settings.CSV_EXPORT_ENCODING) for cell in header])
+                self.writerow(
+                    [
+                        force_str(cell, encoding=settings.CSV_EXPORT_ENCODING)
+                        for cell in header
+                    ]
+                )
 
             for entry in queryset:
                 row = []
@@ -80,9 +85,12 @@ class FormLogExporterBase(ExporterBase):
                     row.append(entry.created)
                 if include_pk:
                     row.append(entry.pk)
-                name_to_value = {d['name']: d['value'] for d in entry.data}
+                name_to_value = {d["name"]: d["value"] for d in entry.data}
                 for field in field_order:
-                    value = friendly(name_to_value.get(field), null_value=settings.CSV_EXPORT_NULL_VALUE)
+                    value = friendly(
+                        name_to_value.get(field),
+                        null_value=settings.CSV_EXPORT_NULL_VALUE,
+                    )
                     value = force_str(value, encoding=settings.CSV_EXPORT_ENCODING)
                     row.append(value)
 

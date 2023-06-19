@@ -12,10 +12,9 @@ else:  # pragma: no cover
 
 
 class XlsExporter(FormLogExporterBase):
-
     @staticmethod
     def export_format():
-        return 'XLS'
+        return "XLS"
 
     @staticmethod
     def is_enabled():
@@ -27,8 +26,8 @@ class XlsExporter(FormLogExporterBase):
         self.rownum = 0
 
     def init_response(self):
-        self.response = HttpResponse(content_type='application/ms-excel')
-        self.response['Content-Disposition'] = 'attachment; filename=%s.xls' % (
+        self.response = HttpResponse(content_type="application/ms-excel")
+        self.response["Content-Disposition"] = "attachment; filename=%s.xls" % (
             self.model._meta.verbose_name_plural
         )
 

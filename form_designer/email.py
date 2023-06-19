@@ -22,8 +22,7 @@ def _template_replace_list(input_str, context_dict):
         return []
     return [
         string_template_replace(email, context_dict)
-        for email
-        in re.compile(r'\s*[,;]+\s*').split(force_str(input_str))
+        for email in re.compile(r"\s*[,;]+\s*").split(force_str(input_str))
     ]
 
 
@@ -52,16 +51,15 @@ def build_form_mail(form_definition, form, files=None):
     reply_to = _template_replace_list(form_definition.mail_reply_to, context_dict)
 
     mail_subject = string_template_replace(
-        (form_definition.mail_subject or form_definition.title),
-        context_dict
+        (form_definition.mail_subject or form_definition.title), context_dict
     )
 
     kwargs = {
-        'subject': mail_subject,
-        'body': message,
-        'from_email': from_email,
-        'to': mail_to,
-        'reply_to': reply_to,
+        "subject": mail_subject,
+        "body": message,
+        "from_email": from_email,
+        "to": mail_to,
+        "reply_to": reply_to,
     }
 
     message = EmailMessage(**kwargs)
