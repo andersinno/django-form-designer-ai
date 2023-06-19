@@ -121,6 +121,8 @@ def test_simple_form(
 )
 @pytest.mark.parametrize("n_logs", range(5))
 def test_export(rf, greeting_form, exporter, n_logs):
+    if exporter is XlsExporter:
+        pytest.importorskip("xlsx")
     message = "Térve"
     for n in range(n_logs):
         fl = FormLog.objects.create(form_definition=greeting_form)
