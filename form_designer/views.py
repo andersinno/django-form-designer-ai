@@ -1,5 +1,4 @@
 import json
-from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from django.contrib import messages
