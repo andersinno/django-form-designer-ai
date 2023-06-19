@@ -12,7 +12,14 @@ from form_designer.utils import get_random_hash
 
 
 def get_storage():
-    return app_settings.FILE_STORAGE_CLASS()
+    if app_settings.FILE_STORAGE_NAME:  # Django 4.2+
+        from django.core.files.storage import storages
+        return storages[app_settings.FILE_STORAGE_NAME]
+    if app_settings.FILE_STORAGE_CLASS:
+        from django.core.files.storage import get_storage_class
+        return get_storage_class(app_settings.FILE_STORAGE_CLASS)()
+    from django.core.files.storage import default_storage
+    return default_storage
 
 
 def clean_files(form):
