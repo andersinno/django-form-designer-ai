@@ -9,7 +9,7 @@ register = template.Library()
 
 
 def friendly(value, null_value=None):
-    if value is None and not (null_value is None):
+    if value is None and null_value is not None:
         return null_value
     if isinstance(value, (QuerySet, list)):
         value = ", ".join(force_str(object) for object in value)
@@ -18,6 +18,7 @@ def friendly(value, null_value=None):
     if hasattr(value, "url"):
         value = value.url
     return force_str(value)
+
 
 
 register.filter(friendly)

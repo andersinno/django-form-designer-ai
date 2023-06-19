@@ -7,7 +7,7 @@ Acknowledgements
 This project is a fork of https://github.com/samluescher/django-form-designer .
 Thanks, @samluescher!
 
-This fork is compatible with Django 3.0+ and Python 3.6+.
+This fork is compatible with Django 3+ and Python 3.7+.
 
 General
 =======

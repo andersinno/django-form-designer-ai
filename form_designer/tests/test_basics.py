@@ -11,7 +11,7 @@ from form_designer import settings as fd_settings
 from form_designer.contrib.exporters.csv_exporter import CsvExporter
 from form_designer.contrib.exporters.xls_exporter import XlsExporter
 from form_designer.forms import DesignedForm
-from form_designer.models import FormDefinition, FormDefinitionField, FormLog, FormValue
+from form_designer.models import FormLog, FormValue
 from form_designer.views import process_form
 
 # https://raw.githubusercontent.com/mathiasbynens/small/master/jpeg.jpg

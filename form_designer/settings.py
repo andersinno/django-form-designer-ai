@@ -66,7 +66,8 @@ FORM_TEMPLATES = getattr(
     ),
 )
 
-# Sequence of two-tuples like (('your_app.models.ModelName', 'My Model'), ...) for limiting the models available to ModelChoiceField and ModelMultipleChoiceField.
+# Sequence of two-tuples like (('your_app.models.ModelName', 'My Model'), ...) for
+# limiting the models available to ModelChoiceField and ModelMultipleChoiceField.
 # If None, any model can be chosen by entering it as a string
 CHOICE_MODEL_CHOICES = getattr(settings, "FORM_DESIGNER_CHOICE_MODEL_CHOICES", None)
 
@@ -188,6 +189,8 @@ DESIGNED_FORM_CLASS = getattr(
 EMAIL_TEMPLATE = getattr(
     settings, "FORM_DESIGNER_EMAIL_TEMPLATE", "txt/formdefinition/data_message.txt"
 )
+
+PUSH_MESSAGES = getattr(settings, "FORM_DESIGNER_CMS_PLUGIN_PUSH_MESSAGES", False)
 
 # reCAPTCHA settings
 USE_GOOGLE_RECAPTCHA = getattr(settings, "FORM_DESIGNER_USE_GOOGLE_RECAPTCHA", False)

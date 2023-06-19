@@ -14,7 +14,7 @@ def test_admin_list_view_renders(admin_client, greeting_form):
 
 
 @pytest.mark.django_db
-def test_admin_create_view_renders(admin_client):
+def test_admin_create_view_renders_add(admin_client):
     assert admin_client.get("/admin/form_designer/formdefinition/add/").content
 
 
@@ -81,7 +81,7 @@ def test_admin_create_view_creates_form(admin_client, n_fields):
 
 
 @pytest.mark.django_db
-def test_admin_list_view_renders(admin_client, greeting_form_with_log):
+def test_admin_list_view_renders_formlog(admin_client, greeting_form_with_log):
     log = greeting_form_with_log.logs.first()
     greeting_value = log.data[0]["value"]
     assert (

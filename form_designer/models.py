@@ -2,7 +2,6 @@ import re
 from collections import OrderedDict
 from decimal import Decimal
 
-import django
 from django.conf import settings as django_settings
 from django.db import models
 from django.template.loader import get_template
@@ -13,12 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from picklefield.fields import PickledObjectField
 
 from form_designer import settings
-from form_designer.fields import (
-    ModelNameField,
-    RegexpExpressionField,
-    TemplateCharField,
-    TemplateTextField,
-)
+from form_designer.fields import ModelNameField, RegexpExpressionField, TemplateCharField, TemplateTextField
 from form_designer.utils import get_random_hash, string_template_replace
 
 MAIL_TEMPLATE_CONTEXT_HELP_TEXT = _(
@@ -43,7 +37,6 @@ def get_django_template_from_string(template_string):
     # object does not work for reasons unknown (well, semi-unknown;
     # it just seems to have a slightly different API).
     from django.template.backends.django import DjangoTemplates
-
     return DjangoTemplates(
         {
             "NAME": "django-form-designer-renderer",
@@ -73,7 +66,9 @@ class FormDefinition(models.Model):
     action = models.URLField(
         _("target URL"),
         help_text=_(
-            'If you leave this empty, the page where the form resides will be requested, and you can use the mail form and logging features. You can also send data to external sites: For instance, enter "http://www.google.ch/search" to create a search form.'
+            "If you leave this empty, the page where the form resides will be requested, "
+            "and you can use the mail form and logging features. You can also send data to "
+            'external sites: For instance, enter "http://www.google.ch/search" to create a search form.'
         ),
         max_length=255,
         blank=True,
@@ -90,7 +85,8 @@ class FormDefinition(models.Model):
     mail_to = TemplateCharField(
         _("send form data to e-mail address"),
         help_text=_(
-            'Separate several addresses with a comma. Your form fields are available as template context. Example: "admin@domain.com, {{ from_email }}" if you have a field named `from_email`.'
+            "Separate several addresses with a comma. Your form fields are available as "
+            'template context. Example: "admin@domain.com, {{ from_email }}" if you have a field named `from_email`.'
         ),
         max_length=255,
         blank=True,
@@ -113,7 +109,8 @@ class FormDefinition(models.Model):
         _("email subject"),
         max_length=255,
         help_text=_(
-            'Your form fields are available as template context. Example: "Contact form {{ subject }}" if you have a field named `subject`.'
+            "Your form fields are available as template context. Example: "
+            '"Contact form {{ subject }}" if you have a field named `subject`.'
         ),
         blank=True,
         null=True,
@@ -162,7 +159,11 @@ class FormDefinition(models.Model):
     message_template = TemplateTextField(
         _("message template"),
         help_text=_(
-            'Your form fields are available as template context. Example: "{{ message }}" if you have a field named `message`. To iterate over all fields, use the variable `data` (a list containing a dictionary for each form field, each containing the elements `name`, `label`, `value`). If you have set up email cover text, you can use {{ mail_cover_text }} to access it.'
+            'Your form fields are available as template context. Example: "{{ message }}" if '
+            "you have a field named `message`. To iterate over all fields, use the variable `data` "
+            "(a list containing a dictionary for each form field, each containing the elements "
+            "`name`, `label`, `value`). If you have set up email cover text, "
+            "you can use {{ mail_cover_text }} to access it."
         ),
         blank=True,
         null=True,
@@ -346,7 +347,7 @@ class FormDefinitionField(models.Model):
             self.position = 0
         super().save(*args, **kwargs)
 
-    def get_form_field_init_args(self):
+    def get_form_field_init_args(self):  # noqa: C901
         args = {
             "required": self.required,
             "label": self.label if self.label else "",
@@ -405,13 +406,13 @@ class FormDefinitionField(models.Model):
         ):
             if self.choice_values:
                 choices = []
-                regex = re.compile("[\\s]*\n[\\s]*")
+                regex = re.compile(r"[\s]*\n[\s]*")
                 values = regex.split(self.choice_values)
                 labels = regex.split(self.choice_labels) if self.choice_labels else []
                 for index, value in enumerate(values):
                     try:
                         label = labels[index]
-                    except:
+                    except Exception:
                         label = value
                     choices.append((value, label))
                 args.update({"choices": tuple(choices)})
@@ -458,9 +459,8 @@ class FormLog(models.Model):
         verbose_name_plural = _("form logs")
 
     def __str__(self):
-        return "{} ({})".format(
-            self.form_definition.title or self.form_definition.name, self.created
-        )
+        title = self.form_definition.title or self.form_definition.name
+        return f"{title} ({self.created})"
 
     def get_data(self):
         if self._data:

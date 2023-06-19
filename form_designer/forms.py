@@ -24,7 +24,7 @@ class DesignedForm(forms.Form):
 
     def add_defined_field(self, def_field, initial_data=None):
         if initial_data and def_field.name in initial_data:
-            if not def_field.field_class in (
+            if def_field.field_class not in (
                 "django.forms.MultipleChoiceField",
                 "django.forms.ModelMultipleChoiceField",
             ):

@@ -29,8 +29,7 @@ def clean_files(form):
             file_size = uploaded_file.size
             total_upload_size += file_size
             if (
-                not os.path.splitext(uploaded_file.name)[1].lstrip(".").lower()
-                in app_settings.ALLOWED_FILE_TYPES
+                os.path.splitext(uploaded_file.name)[1].lstrip(".").lower() not in app_settings.ALLOWED_FILE_TYPES
             ):
                 msg = _("This file type is not allowed.")
             elif file_size > app_settings.MAX_UPLOAD_SIZE:

@@ -39,7 +39,7 @@ class ExporterBase:
 
 
 class FormLogExporterBase(ExporterBase):
-    def export(self, request, queryset=None):
+    def export(self, request, queryset=None):  # noqa: C901
         self.init_response()
         self.init_writer()
         distinct_forms = queryset.aggregate(Count("form_definition", distinct=True))[

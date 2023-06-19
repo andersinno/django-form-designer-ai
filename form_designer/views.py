@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template.context_processors import csrf
+from django.utils.http import urlencode
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
@@ -59,7 +60,7 @@ def update_recaptcha_context(context):
     )
 
 
-def process_form(
+def process_form(  # noqa: C901
     request,
     form_definition,
     extra_context=None,
