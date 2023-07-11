@@ -25,6 +25,14 @@ dependencies = [
 [project.urls]
 Homepage = "http://github.com/kcsry/django-form-designer"
 
+[tool.hatch.build]
+include = [
+  "form_designer/**/*.py",
+  "form_designer/templates/",
+  "form_designer/static/",
+  "form_designer/locale/",
+]
+
 [tool.hatch.version]
 path = "form_designer/__init__.py"
 
