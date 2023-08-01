@@ -1,6 +1,6 @@
 from cms.models import CMSPlugin
 from django.db import models
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 
 from form_designer.models import FormDefinition
@@ -12,4 +12,4 @@ class CMSFormDefinition(CMSPlugin):
     )
 
     def __str__(self):
-        return force_text(self.form_definition)
+        return force_str(self.form_definition)
