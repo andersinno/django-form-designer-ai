@@ -1,5 +1,5 @@
 from django.db.models import Count
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 
 from form_designer import settings
@@ -72,7 +72,7 @@ class FormLogExporterBase(ExporterBase):
 
                 self.writerow(
                     [
-                        force_text(cell, encoding=settings.CSV_EXPORT_ENCODING)
+                        force_str(cell, encoding=settings.CSV_EXPORT_ENCODING)
                         for cell in header
                     ]
                 )
@@ -91,7 +91,7 @@ class FormLogExporterBase(ExporterBase):
                         name_to_value.get(field),
                         null_value=settings.CSV_EXPORT_NULL_VALUE,
                     )
-                    value = force_text(value, encoding=settings.CSV_EXPORT_ENCODING)
+                    value = force_str(value, encoding=settings.CSV_EXPORT_ENCODING)
                     row.append(value)
 
                 self.writerow(row)
