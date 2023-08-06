@@ -46,7 +46,7 @@ def test_simple_form(
     override_form,
 ):
     fd = greeting_form
-    message = "zzz-å%sÖ" % get_random_string()
+    message = "zzz-å%sÖ" % get_random_string(12)
     data = {
         "greeting": message,
         "upload": ContentFile(VERY_SMALL_JPEG, name="hello.jpg"),
