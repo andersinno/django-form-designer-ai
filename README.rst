@@ -1,6 +1,12 @@
 Django Form Designer (AI Fork)
 ******************************
 
+Unmaintained
+============
+
+This fork is unmaintained.  There's an alternative fork at
+https://github.com/kcsry/django-form-designer
+
 Acknowledgements
 ================
 
