@@ -18,7 +18,7 @@ classifiers = [
   "Topic :: Internet :: WWW/HTTP",
 ]
 dependencies = [
-  "django>=4.0",
+  "django>=3.0",
   "django-picklefield",
 ]
 
