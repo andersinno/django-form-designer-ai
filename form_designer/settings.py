@@ -1,6 +1,7 @@
 import os.path
+
 from django.conf import settings
-from django.core.files.storage import get_storage_class
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
 STATIC_URL = os.path.join(
@@ -58,7 +59,6 @@ FORM_TEMPLATES = getattr(
     (
         ("", _("Default")),
         ("html/formdefinition/forms/as_p.html", _("as paragraphs")),
-        ("html/formdefinition/forms/as_p_cms.html", _("as paragraphs for cms")),
         ("html/formdefinition/forms/as_table.html", _("as table")),
         ("html/formdefinition/forms/as_table_h.html", _("as table (horizontal)")),
         ("html/formdefinition/forms/as_ul.html", _("as unordered list")),
@@ -103,9 +103,9 @@ CSV_EXPORT_NULL_VALUE = getattr(settings, "FORM_DESIGNER_CSV_EXPORT_NULL_VALUE",
 
 SUBMIT_FLAG_NAME = getattr(settings, "FORM_DESIGNER_SUBMIT_FLAG_NAME", "submit__%s")
 
-FILE_STORAGE_CLASS = getattr(
-    settings, "FORM_DESIGNER_FILE_STORAGE_CLASS", get_storage_class()
-)
+FILE_STORAGE_CLASS = getattr(settings, "FORM_DESIGNER_FILE_STORAGE_CLASS", None)
+
+FILE_STORAGE_NAME = getattr(settings, "FORM_DESIGNER_FILE_STORAGE_NAME", None)
 
 FILE_STORAGE_DIR = "form_uploads"
 

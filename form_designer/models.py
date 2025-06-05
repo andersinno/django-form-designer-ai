@@ -1,9 +1,9 @@
 import re
 from collections import OrderedDict
 from decimal import Decimal
+
 from django.conf import settings as django_settings
 from django.db import models
-from django.template.backends.django import DjangoTemplates
 from django.template.loader import get_template
 from django.urls import reverse
 from django.utils.deprecation import warn_about_renamed_method
@@ -27,7 +27,7 @@ class FormValueDict(dict):
         self["name"] = name
         self["value"] = value
         self["label"] = label
-        super(FormValueDict, self).__init__()
+        super().__init__()
 
 
 def get_django_template_from_string(template_string):
@@ -36,6 +36,7 @@ def get_django_template_from_string(template_string):
     # even includes one.  Using the "raw" `django.template.Template`
     # object does not work for reasons unknown (well, semi-unknown;
     # it just seems to have a slightly different API).
+    from django.template.backends.django import DjangoTemplates
     return DjangoTemplates(
         {
             "NAME": "django-form-designer-renderer",
@@ -183,7 +184,7 @@ class FormDefinition(models.Model):
             self.private_hash = get_random_hash()
         if not self.public_hash:
             self.public_hash = get_random_hash()
-        super(FormDefinition, self).save()
+        super().save()
 
     def get_field_dict(self):
         field_dict = OrderedDict()
@@ -344,7 +345,7 @@ class FormDefinitionField(models.Model):
     def save(self, *args, **kwargs):
         if self.position is None:
             self.position = 0
-        super(FormDefinitionField, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def get_form_field_init_args(self):  # noqa: C901
         args = {
@@ -458,10 +459,8 @@ class FormLog(models.Model):
         verbose_name_plural = _("form logs")
 
     def __str__(self):
-        return "%s (%s)" % (
-            self.form_definition.title or self.form_definition.name,
-            self.created,
-        )
+        title = self.form_definition.title or self.form_definition.name
+        return f"{title} ({self.created})"
 
     def get_data(self):
         if self._data:
@@ -505,7 +504,7 @@ class FormLog(models.Model):
     data = property(get_data, set_data)
 
     def save(self, *args, **kwargs):
-        super(FormLog, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         if self._data:
             # safe form data and then clear temporary variable
             for value in self.values.all():
@@ -527,4 +526,4 @@ class FormValue(models.Model):
     value = PickledObjectField(_("value"), null=True, blank=True)
 
     def __str__(self):
-        return "%s = %s" % (self.field_name, self.value)
+        return f"{self.field_name} = {self.value}"

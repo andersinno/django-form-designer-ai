@@ -1,5 +1,5 @@
-Django Form Designer (AI Fork)
-******************************
+Django Form Designer (KCS Fork)
+*******************************
 
 Unmaintained
 ============
@@ -13,7 +13,7 @@ Acknowledgements
 This project is a fork of https://github.com/samluescher/django-form-designer .
 Thanks, @samluescher!
 
-This fork is compatible with Django 3+ and Python 3.7+.
+This fork is compatible with Django 4+ and Python 3.7+.
 
 General
 =======
@@ -25,7 +25,6 @@ complete with logging, validation, and redirects.
 
 * Design contact forms, search forms etc from the Django admin, without writing any code
 * Form data can be logged and CSV-exported, sent via e-mail, or forwarded to any web address
-* Integration with `Django CMS <http://www.django-cms.org>`_: Add forms to any page
 * Use drag & drop to change the position of your form fields
 * Fully collapsible admin interface for better overview over your form
 * Implements many form fields included with Django (TextField, EmailField, DateField etc)
@@ -55,24 +54,6 @@ Basic setup
         (r'^forms/', include('form_designer.urls')),
         ...
     )
-
-  .. Note::
-     If you are using the form_designer plugin for Django CMS for making forms
-     public, this step is not necessary.
-
-
-Using Django Form Designer with Django CMS
-==========================================
-
-- Add ``form_designer.contrib.cms_plugins.form_designer_form`` to your ``INSTALLED_APPS``
-  setting::
-
-        INSTALLED_APPS = (
-            ...
-            'form_designer.contrib.cms_plugins.form_designer_form',
-        )
-
-You can now add forms to pages created with Django CMS.
 
 
 Optional requirements

@@ -1,4 +1,6 @@
 import os
+from types import SimpleNamespace
+
 from django.core.files.base import File
 from django.db.models.fields.files import FieldFile
 from django.forms.forms import NON_FIELD_ERRORS
@@ -10,7 +12,14 @@ from form_designer.utils import get_random_hash
 
 
 def get_storage():
-    return app_settings.FILE_STORAGE_CLASS()
+    if app_settings.FILE_STORAGE_NAME:  # Django 4.2+
+        from django.core.files.storage import storages
+        return storages[app_settings.FILE_STORAGE_NAME]
+    if app_settings.FILE_STORAGE_CLASS:
+        from django.core.files.storage import get_storage_class
+        return get_storage_class(app_settings.FILE_STORAGE_CLASS)()
+    from django.core.files.storage import default_storage
+    return default_storage
 
 
 def clean_files(form):
@@ -27,8 +36,7 @@ def clean_files(form):
             file_size = uploaded_file.size
             total_upload_size += file_size
             if (
-                not os.path.splitext(uploaded_file.name)[1].lstrip(".").lower()
-                in app_settings.ALLOWED_FILE_TYPES
+                os.path.splitext(uploaded_file.name)[1].lstrip(".").lower() not in app_settings.ALLOWED_FILE_TYPES
             ):
                 msg = _("This file type is not allowed.")
             elif file_size > app_settings.MAX_UPLOAD_SIZE:
@@ -72,11 +80,11 @@ def handle_uploaded_files(form_definition, form):
                 os.path.join(
                     app_settings.FILE_STORAGE_DIR,
                     form_definition.name,
-                    "%s_%s%s" % (root, secret_hash, ext),
+                    f"{root}_{secret_hash}{ext}",
                 )
             )
             storage.save(filename, uploaded_file)
-            form.cleaned_data[field.name] = StoredUploadedFile(filename)
+            form.cleaned_data[field.name] = StoredUploadedFile(name=filename)
             files.append(storage.path(filename))
     return files
 
@@ -90,17 +98,8 @@ class StoredUploadedFile(FieldFile):
 
     def __init__(self, name):
         File.__init__(self, None, name)
-        self.field = self
-
-    def __getstate__(self):
-        return {"name": self.name, "closed": False, "_committed": True, "_file": None}
-
-    def __setstate__(self, state):
-        self.__dict__.update(state)
-
-    @property
-    def storage(self):
-        return get_storage()
+        self.field = SimpleNamespace(storage=get_storage())
+        self.instance = None
 
     def save(self, *args, **kwargs):
         raise NotImplementedError("Static files are read-only")  # pragma: no cover

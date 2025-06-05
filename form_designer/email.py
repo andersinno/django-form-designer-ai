@@ -1,6 +1,7 @@
 import re
+
 from django.core.mail import EmailMessage
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 from form_designer.utils import string_template_replace
 
@@ -21,7 +22,7 @@ def _template_replace_list(input_str, context_dict):
         return []
     return [
         string_template_replace(email, context_dict)
-        for email in re.compile(r"\s*[,;]+\s*").split(force_text(input_str))
+        for email in re.compile(r"\s*[,;]+\s*").split(force_str(input_str))
     ]
 
 
@@ -58,9 +59,8 @@ def build_form_mail(form_definition, form, files=None):
         "body": message,
         "from_email": from_email,
         "to": mail_to,
+        "reply_to": reply_to,
     }
-
-    kwargs["reply_to"] = reply_to
 
     message = EmailMessage(**kwargs)
 

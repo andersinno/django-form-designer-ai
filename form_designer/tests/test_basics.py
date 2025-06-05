@@ -1,6 +1,6 @@
-# -- encoding: UTF-8 --
-import pytest
 from base64 import b64decode
+
+import pytest
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.base import BaseStorage
 from django.core import mail
@@ -46,7 +46,7 @@ def test_simple_form(
     override_form,
 ):
     fd = greeting_form
-    message = "zzz-å%sÖ" % get_random_string()
+    message = f"zzz-å{get_random_string(12)}Ö"
     data = {
         "greeting": message,
         "upload": ContentFile(VERY_SMALL_JPEG, name="hello.jpg"),
@@ -121,6 +121,8 @@ def test_simple_form(
 )
 @pytest.mark.parametrize("n_logs", range(5))
 def test_export(rf, greeting_form, exporter, n_logs):
+    if exporter is XlsExporter:
+        pytest.importorskip("xlsx")
     message = "Térve"
     for n in range(n_logs):
         fl = FormLog.objects.create(form_definition=greeting_form)
@@ -142,4 +144,4 @@ def test_export(rf, greeting_form, exporter, n_logs):
             assert "Greeting" in csv_data[0]
             for i in range(1, n_logs):
                 assert message in csv_data[i]
-                assert ("%s" % i) in csv_data[i]
+                assert (f"{i}") in csv_data[i]

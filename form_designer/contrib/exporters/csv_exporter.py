@@ -1,4 +1,5 @@
 import csv
+
 from django.http import HttpResponse
 
 from form_designer import settings
@@ -15,12 +16,12 @@ class CsvExporter(FormLogExporterBase):
 
     def init_response(self):
         self.response = HttpResponse(content_type="text/csv")
-        self.response["Content-Disposition"] = (
-            "attachment; filename=%s.csv" % self.model._meta.verbose_name_plural
-        )
+        self.response[
+            "Content-Disposition"
+        ] = f"attachment; filename={self.model._meta.verbose_name_plural}.csv"
 
     def writerow(self, row):
         self.writer.writerow(row)
 
     def export(self, request, queryset=None):
-        return super(CsvExporter, self).export(request, queryset)
+        return super().export(request, queryset)

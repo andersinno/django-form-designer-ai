@@ -1,4 +1,6 @@
 import json
+from urllib.request import Request, urlopen
+
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -6,11 +8,15 @@ from django.template.context_processors import csrf
 from django.utils.http import urlencode
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
-from urllib.request import urlopen
 
 from form_designer import settings as app_settings
 from form_designer.models import FormDefinition
-from form_designer.signals import designedform_error, designedform_render, designedform_submit, designedform_success
+from form_designer.signals import (
+    designedform_error,
+    designedform_render,
+    designedform_submit,
+    designedform_success,
+)
 from form_designer.uploads import handle_uploaded_files
 
 
@@ -30,7 +36,8 @@ def check_recaptcha(request, context, push_messages):
         "response": recaptcha_response,
     }
     data = urlencode(values).encode("utf-8")
-    response = urlopen(url, data=data)
+    req = Request(url, data)
+    response = urlopen(req)
     result = json.load(response)
     """ End reCAPTCHA validation """
     if not result["success"]:

@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 from django.db import migrations, models
 
 import form_designer.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("form_designer", "0002_reply_to"),
     ]
