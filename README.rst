@@ -1,5 +1,5 @@
-Django Form Designer (KCS Fork)
-*******************************
+Django Form Designer (AI Fork)
+******************************
 
 Unmaintained
 ============
