@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "http://github.com/kcsry/django-form-designer"
+Homepage = "https://github.com/andersinno/django-form-designer-ai"
 
 [tool.hatch.build]
 include = [
